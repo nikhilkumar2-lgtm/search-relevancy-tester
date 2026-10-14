@@ -1,0 +1,8 @@
+curl --url 'https://nx092603s.searchunify.com/search/SUSearchResults'
+-H 'accept: application/json'
+-H 'authorization: bearer <YOUR_TOKEN>'
+-H 'content-type: application/json'
+-b '<YOUR_COOKIES>'
+-H 'origin: https://navex--staging.sandbox.my.site.com'
+-H 'referer: https://navex--staging.sandbox.my.site.com/'
+--data-raw '{"searchString":"","from":0,"pageNum":1,"pageNo":1,"sortby":"_score","orderBy":"desc","resultsPerPage":10,"exactPhrase":"","withOneOrMore":"","withoutTheWords":"","withWildcardSearch":"","aggregations":[{"type":"Language","filter":["en_US","en","en-us"]}],"smartFacets":false,"language":"en","versionResults":false,"mergeSources":false}'

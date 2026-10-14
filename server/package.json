@@ -1,0 +1,21 @@
+{
+  "name": "relevancy-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "axios": "1.7",
+    "cors": "^2.8.6",
+    "csv-parse": "^5.6.0",
+    "curlconverter": "^4.12.0",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.22.3",
+    "google-auth-library": "^9.15.1",
+    "zod": "^3.25.76"
+  }
+}

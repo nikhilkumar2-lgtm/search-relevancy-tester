@@ -1,0 +1,17 @@
+{
+  "name": "search-relevancy-evaluator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "npm run start --prefix server",
+    "test": "mocha shared/tests/*.test.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "mocha": "^10.8.2"
+  }
+}
