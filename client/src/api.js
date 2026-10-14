@@ -1,5 +1,13 @@
+// VITE_API_URL points at the Render API when the UI is hosted elsewhere (Netlify); empty = same origin / dev proxy.
+const BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+export const getToken = () => localStorage.getItem('rel.token') || '';
+export const setToken = (t) => (t ? localStorage.setItem('rel.token', t) : localStorage.removeItem('rel.token'));
+// Download / EventSource URLs cannot send headers, so the token travels as a query parameter.
+const withToken = (url) => (getToken() ? `${url}${url.includes('?') ? '&' : '?'}token=${encodeURIComponent(getToken())}` : url);
+
 async function request(path, options) {
-  const res = await fetch(`/api${path}`, { headers: { 'Content-Type': 'application/json' }, ...options });
+  const headers = { 'Content-Type': 'application/json', ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) };
+  const res = await fetch(`${BASE}/api${path}`, { headers, ...options });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
     const details = body.details ? ` (${body.details.join('; ')})` : '';
@@ -18,12 +26,12 @@ export const api = {
   getRun: (id) => request(`/run/${id}`),
   listRuns: () => request('/runs'),
   writeBack: (id) => post(`/run/${id}/writeback`),
-  exportUrl: (id) => `/api/run/${id}/export?format=xlsx`,
+  exportUrl: (id) => withToken(`${BASE}/api/run/${id}/export?format=xlsx`),
   gtDefaults: () => request('/gt/defaults'),
   gtPlan: (payload) => post('/gt/plan', payload),
   gtGenerate: (payload) => post('/gt/generate', payload),
   gtGet: (id) => request(`/gt/${id}`),
   gtCancel: (id) => post(`/gt/${id}/cancel`),
-  gtExportUrl: (id) => `/api/gt/${id}/export`,
-  streamUrl: (id) => `/api/run/${id}/stream`,
+  gtExportUrl: (id) => withToken(`${BASE}/api/gt/${id}/export`),
+  streamUrl: (id) => withToken(`${BASE}/api/run/${id}/stream`),
 };
