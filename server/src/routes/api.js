@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { config } from '../config.js';
 import { HttpError, asyncHandler } from '../utils/errors.js';
 import { parseCurl } from '../services/curlParser.js';
 import { readSheet, hasServiceAccount, writeResults } from '../services/sheets.js';
@@ -20,7 +19,7 @@ const getRun = async (id) => {
   return { run, live };
 };
 
-router.get('/health', (req, res) => res.json({ ok: true, authRequired: !!config.accessToken, googleMode: hasServiceAccount() ? 'service-account' : 'public-csv' }));
+router.get('/health', (req, res) => res.json({ ok: true, googleMode: hasServiceAccount() ? 'service-account' : 'public-csv' }));
 
 router.post('/sheet/preview', asyncHandler(async (req, res) => {
   const input = previewSchema.parse(req.body);

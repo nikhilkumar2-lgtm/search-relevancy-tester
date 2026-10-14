@@ -5,13 +5,11 @@ import path from 'node:path';
 import { config } from './config.js';
 import { router } from './routes/api.js';
 import { gtRouter } from './routes/groundTruth.js';
-import { requireToken } from './middleware/auth.js';
 import { errorHandler, notFound } from './middleware/error.js';
 
 const app = express();
 app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json({ limit: '1mb' }));
-app.use('/api', requireToken);
 app.use('/api/gt', gtRouter);
 app.use('/api', router);
 app.use('/api', notFound);

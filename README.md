@@ -83,12 +83,3 @@ Keys come from `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` in `.env`, or paste one in
 
 With several aggregations, each entry is sampled on its own and the requested count is split evenly (50 queries over 2 aggregations = 25 each;
 if one has fewer documents than its share, the shortfall goes to the others). Put several values in one aggregation row to keep them as a single filter.
-
-## Deploy (Render API + Netlify UI)
-
-1. **Render** → New → *Blueprint* → pick this repo (uses `render.yaml`). Set `CORS_ORIGIN` to your Netlify URL (you can fill it in after step 2) and optionally the LLM keys. Copy the generated `ACCESS_TOKEN` from the service's environment tab.
-2. **Netlify** → Add new site → import this repo (uses `netlify.toml`). Add the environment variable `VITE_API_URL` = your Render URL (e.g. `https://relevancy-api.onrender.com`), then deploy.
-3. Open the Netlify URL and enter the access token.
-
-Without `ACCESS_TOKEN` anyone with the link can use your LLM keys and make the server call arbitrary URLs — always set it on a public deployment.
-The Render free plan sleeps when idle (first request is slow) and its disk is ephemeral, so run history is lost on redeploy.

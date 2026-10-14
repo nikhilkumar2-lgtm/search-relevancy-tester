@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api, getToken, setToken } from './api.js';
+import { api } from './api.js';
 import CurlStep from './components/CurlStep.jsx';
 import SheetStep from './components/SheetStep.jsx';
 import RunStep from './components/RunStep.jsx';
@@ -44,46 +44,18 @@ export default function App() {
   const [sheet, setSheet] = useState(() => load('rel.sheet', { sheet: '', tab: '' }));
   const [runId, setRunId] = useState(null);
   const [health, setHealth] = useState(null);
-  const [locked, setLocked] = useState(false);
-  const [tokenInput, setTokenInput] = useState('');
-  const [tokenError, setTokenError] = useState('');
 
   useEffect(() => localStorage.setItem('rel.settings3', JSON.stringify(settings)), [settings]);
   useEffect(() => localStorage.setItem('rel.sheet', JSON.stringify(sheet)), [sheet]);
-  useEffect(() => {
-    api.health().then(async (h) => {
-      setHealth(h);
-      if (h.authRequired) await api.listRuns().catch(() => setLocked(true)); // a stored token may be missing or stale
-    }).catch(() => setHealth({ error: true }));
-  }, []);
-
-  const unlock = async (e) => {
-    e.preventDefault();
-    setToken(tokenInput.trim());
-    try { await api.listRuns(); setLocked(false); setTokenError(''); } catch { setToken(''); setTokenError('That token was not accepted.'); }
-  };
+  useEffect(() => { api.health().then(setHealth).catch(() => setHealth({ error: true })); }, []);
 
   const openRun = (id) => { setRunId(id); setStep(3); };
-
-  if (locked) {
-    return (
-      <div className="app">
-        <form className="card" onSubmit={unlock}>
-          <h2>Access token required</h2>
-          <input type="password" autoFocus value={tokenInput} onChange={(e) => setTokenInput(e.target.value)} placeholder="Access token" />
-          {tokenError && <p className="error">{tokenError}</p>}
-          <div className="actions"><button className="primary">Unlock</button></div>
-        </form>
-      </div>
-    );
-  }
 
   return (
     <div className="app">
       <header>
         <h1>Search Relevancy Evaluator</h1>
         {health?.error && <span className="badge bad">API offline</span>}
-        {health?.authRequired && getToken() && <button onClick={() => { setToken(''); setLocked(true); }}>Lock</button>}
         {health?.googleMode && <span className="badge">Sheets: {health.googleMode === 'service-account' ? 'service account' : 'public CSV'}</span>}
       </header>
       <nav>
